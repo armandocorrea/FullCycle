@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  app:
+    image: kikobatery/nodejs
+    container_name: app
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh
+    networks:
+      - minharede
+    #volumes:
+    #  - ./nodejs:/usr/src/app        
+    tty: true
+    ports:
+      - "3000"
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx    
+    entrypoint: dockerize -wait tcp://app:3000 -timeout 50s /docker-entrypoint.sh
+    command: nginx -g 'daemon off;'    
+    networks:
+      - minharede
+    tty: true
+    ports:
+      - "8080:80"
+    depends_on:      
+      - app      
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0 --explicit_defaults_for_timestamp --ignore-db-dir=lost+found
+    container_name: db
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql:/usr/local/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT=root
+    networks:
+      - minharede
+
+networks:
+  minharede:
+    driver: bridge
