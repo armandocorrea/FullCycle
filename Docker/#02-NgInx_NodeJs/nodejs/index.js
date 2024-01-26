@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
       peoples = result;
 
       var body = '<h1>Full Cycle Rocks!!!</h1>'   
-	  body += '<span>Pressione (F5) para um novo membro Full Cycle Rocks!!!</span><br/>'
+	    body += '<span>Pressione (F5) para um novo membro Full Cycle Rocks!!!</span></br></br>'
 
       peoples.forEach(element => {
         body += `<li>${element.name}</li>`    

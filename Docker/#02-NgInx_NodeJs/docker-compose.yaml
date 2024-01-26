@@ -2,13 +2,14 @@ version: '3'
 
 services:
   app:
-    image: kikobatery/nodejs
+    build:
+      context: ./nodejs
     container_name: app
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh
+    volumes:
+      - ./nodejs:/usr/src/app
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh  
     networks:
       - minharede
-    #volumes:
-    #  - ./nodejs:/usr/src/app        
     tty: true
     ports:
       - "3000"
