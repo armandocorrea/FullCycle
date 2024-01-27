@@ -11,19 +11,18 @@ const mysql = require('mysql')
 const geradornome = require('gerador-nome')
 
 const connection = mysql.createConnection(config)
-connection.query('create table people (id int not null auto_increment, name varchar(255) not null, primary key (id))');
 
 const strSelectPeople = `SELECT * FROM people`
 var peoples = [];
 
 app.get('/', (req, res) => {        
-    var strInsert = `INSERT INTO people (name) values ('${geradornome.geradorNome()}')` 
+    var strInsert = `INSERT INTO people (name) values ('${geradornome.geradorNome()}')`     
     connection.query(strInsert)
     connection.query(strSelectPeople, (err, result) => {
       peoples = result;
 
       var body = '<h1>Full Cycle Rocks!!!</h1>'   
-	    body += '<span>Pressione (F5) para um novo membro Full Cycle Rocks!!!</span></br></br>'
+	    body += '<span>Pressione (F5) para um novo membro Full Cycle Rocks!!!</span><br><br>'
 
       peoples.forEach(element => {
         body += `<li>${element.name}</li>`    

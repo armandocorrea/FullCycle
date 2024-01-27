@@ -1,7 +1,5 @@
 FROM node:21
 
-COPY . .
-
 WORKDIR /usr/src/app
 
 ENV DOCKERIZE_VERSION v0.7.0
@@ -12,3 +10,5 @@ RUN apt-get update \
     && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
 
 RUN npm install
+
+COPY . .
