@@ -5,9 +5,10 @@ services:
     build:
       context: ./nodejs
     container_name: app
-    volumes:
+    volumes:      
       - ./nodejs:/usr/src/app
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh  
+      - ./nodejs/node_modules:/usr/src/node_modules
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh
     networks:
       - minharede
     tty: true
