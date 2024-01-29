@@ -7,7 +7,7 @@ services:
     container_name: app
     volumes:      
       - ./nodejs:/usr/src/app
-      - ./nodejs/node_modules:/usr/src/node_modules
+      - node_modules:/usr/src/app/node_modules
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js docker-entrypoint.sh
     networks:
       - minharede
@@ -50,3 +50,6 @@ services:
 networks:
   minharede:
     driver: bridge
+
+volumes:
+  node_modules:    
