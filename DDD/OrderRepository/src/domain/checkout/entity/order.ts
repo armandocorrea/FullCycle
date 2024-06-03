@@ -28,12 +28,7 @@ export default class Order {
   changeCustomerId(customerId: string) {
     this._customerId = customerId;
     this.validate();
-  }
-
-  changeItem(item: OrderItem, index: number) {
-    this._items[index] = item;
-    this.validate();
-  }
+  }  
 
   validate(): boolean {
     if (this._id.length === 0) {

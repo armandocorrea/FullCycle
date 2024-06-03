@@ -80,17 +80,17 @@ describe("Order repository test", () => {
         },
       ],
     });
-  });
+  });  
 
   it("should update a order", async () => {
     const customerRepository = new CustomerRepository();
-    const customer = new Customer("123", "Customer 1");
+    let customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
     customer.changeAddress(address);
     await customerRepository.create(customer);    
 
     const productRepository = new ProductRepository();
-    const product = new Product("123", "Product 1", 10);
+    let product = new Product("123", "Product 1", 10);
     await productRepository.create(product);
 
     const orderItem = new OrderItem(
@@ -101,12 +101,12 @@ describe("Order repository test", () => {
       2
     );
 
-    const order = new Order("123", "123", [orderItem]);
+    let order = new Order("123", "123", [orderItem]);
 
     const orderRepository = new OrderRepository();
     await orderRepository.create(order);
 
-    const orderModel = await OrderModel.findOne({
+    let orderModel = await OrderModel.findOne({
       where: { id: order.id },
       include: ["items"],
     });
@@ -127,36 +127,43 @@ describe("Order repository test", () => {
       ],
     });
 
-    const customer2 = new Customer("321", "Customer 2");    
-    customer2.changeAddress(address);
-    await customerRepository.create(customer2);
+    customer = new Customer("321", "Customer 2");    
+    customer.changeAddress(address);
+    await customerRepository.create(customer);
 
-    const product2 = new Product("321", "Product 2", 5);
-    await productRepository.create(product2);
+    product = new Product("321", "Product 2", 5);
+    await productRepository.create(product);
 
     const orderItem2 = new OrderItem(
-      "1",
-      product2.name,
-      product2.price,
-      product2.id,
+      "2",
+      product.name,
+      product.price,
+      product.id,
       5
-    );
+    );    
     
-    order.changeCustomerId("321");
-    order.changeItem(orderItem2, 0);
-
+    order = new Order("123", "321", [orderItem, orderItem2]);
+    
     await orderRepository.update(order);
 
-    const orderModel2 = await OrderModel.findOne({
+    orderModel = await OrderModel.findOne({
       where: { id: order.id },
       include: ["items"],
     });
 
-    expect(orderModel2.toJSON()).toStrictEqual({
+    expect(orderModel.toJSON()).toStrictEqual({
       id: "123",
       customer_id: "321",
       total: order.total(),
       items: [
+        {
+          id: orderItem.id,
+          name: orderItem.name,
+          price: orderItem.price,
+          quantity: orderItem.quantity,
+          order_id: "123",
+          product_id: "123",
+        },
         {
           id: orderItem2.id,
           name: orderItem2.name,
